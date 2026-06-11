@@ -4,7 +4,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
-def build_preprocessor(df: pd.DataFrame):    
+def prepare_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
     # 1. Remove unnecessary columns
     df = df.drop(columns=['ID', 'Z_CostContact', 'Z_Revenue', 'Response'])
 
@@ -27,6 +28,10 @@ def build_preprocessor(df: pd.DataFrame):
             else:
                 df[column] = df[column].fillna(df[column].mode()[0])
 
+    return df
+
+
+def build_preprocessor(df: pd.DataFrame):
     # 4. Identify numeric and categorical columns
     num_cols = df.select_dtypes(include=['int64', 'float64']).columns
     cat_cols = df.select_dtypes(include=['object']).columns
